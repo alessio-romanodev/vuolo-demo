@@ -20,8 +20,8 @@ function cn(...cls: Array<string | undefined | false>) {
 
 type PRCItem = {
   id: string;
-  commessa: string;
-  cliente: string;
+  numeroRotabile: string;
+  postazione: string;
   responsabile: string;
   inizio: string;  // ISO date
   fine?: string;   // ISO date (solo per completati)
@@ -34,8 +34,8 @@ const PRC_DATA: PRCItem[] = [
   // In corso
   {
     id: "PRC-2025-001",
-    commessa: "Revamping Carrozza UIC-Z1",
-    cliente: "FerroLinea S.p.A.",
+    numeroRotabile: "6183 2990 XXX-X",
+    postazione: "Bin 16",
     responsabile: "M. Rossi",
     inizio: "2025-09-10",
     avanzamento: 68,
@@ -44,8 +44,8 @@ const PRC_DATA: PRCItem[] = [
   },
   {
     id: "PRC-2025-002",
-    commessa: "Revisione Sospensioni ETR500",
-    cliente: "AltaVeloce",
+    numeroRotabile: "6183 2990 XXX-X",
+    postazione: "Bin 7",
     responsabile: "L. Bianchi",
     inizio: "2025-09-18",
     avanzamento: 42,
@@ -54,8 +54,8 @@ const PRC_DATA: PRCItem[] = [
   },
   {
     id: "PRC-2025-004",
-    commessa: "Refit Interni Jazz",
-    cliente: "Trasporti Centro",
+    numeroRotabile: "6183 2990 XXX-X",
+    postazione: "Bin 19",
     responsabile: "G. Verdi",
     inizio: "2025-09-28",
     avanzamento: 25,
@@ -65,8 +65,8 @@ const PRC_DATA: PRCItem[] = [
   // Completati
   {
     id: "PRC-2025-003",
-    commessa: "Sostituzione Porte IC901",
-    cliente: "LineaNord",
+    numeroRotabile: "6183 2990 XXX-X",
+    postazione: "Bin 16",
     responsabile: "S. Neri",
     inizio: "2025-08-20",
     fine: "2025-09-12",
@@ -75,8 +75,8 @@ const PRC_DATA: PRCItem[] = [
   },
   {
     id: "PRC-2025-005",
-    commessa: "Manutenzione Ordinaria Minuetto",
-    cliente: "RegioRail",
+    numeroRotabile: "6183 2990 XXX-X",
+    postazione: "Bin 7",
     responsabile: "A. Gallo",
     inizio: "2025-07-05",
     fine: "2025-08-01",
@@ -143,7 +143,7 @@ function Toolbar({
         <Input
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          placeholder="Cerca commessa, cliente, responsabile..."
+          placeholder="Cerca PRC, numero rotabile, postazione, responsabile..."
           className="pl-8"
         />
       </div>
@@ -167,8 +167,8 @@ function TableInCorso({ items }: { items: PRCItem[] }) {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[120px]">PRC</TableHead>
-              <TableHead>Commessa</TableHead>
-              <TableHead>Cliente</TableHead>
+              <TableHead className="w-[200px]">Numero Rotabile</TableHead>
+              <TableHead className="w-[140px]">Postazione</TableHead>
               <TableHead>Responsabile</TableHead>
               <TableHead className="w-[160px]">Avanzamento</TableHead>
               <TableHead className="w-[120px]">Stato</TableHead>
@@ -178,8 +178,8 @@ function TableInCorso({ items }: { items: PRCItem[] }) {
             {items.map((row) => (
               <TableRow key={row.id}>
                 <TableCell className="font-mono">{row.id}</TableCell>
-                <TableCell className="font-medium">{row.commessa}</TableCell>
-                <TableCell>{row.cliente}</TableCell>
+                <TableCell className="font-medium">{row.numeroRotabile}</TableCell>
+                <TableCell>{row.postazione}</TableCell>
                 <TableCell>{row.responsabile}</TableCell>
                 <TableCell>
                   <div className="space-y-1">
@@ -226,8 +226,8 @@ function TableCompletati({ items }: { items: PRCItem[] }) {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[120px]">PRC</TableHead>
-              <TableHead>Commessa</TableHead>
-              <TableHead>Cliente</TableHead>
+              <TableHead className="w-[200px]">Numero Rotabile</TableHead>
+              <TableHead className="w-[140px]">Postazione</TableHead>
               <TableHead>Responsabile</TableHead>
               <TableHead className="w-[160px]">Periodo</TableHead>
               <TableHead className="w-[120px]">Esito</TableHead>
@@ -237,8 +237,8 @@ function TableCompletati({ items }: { items: PRCItem[] }) {
             {items.map((row) => (
               <TableRow key={row.id}>
                 <TableCell className="font-mono">{row.id}</TableCell>
-                <TableCell className="font-medium">{row.commessa}</TableCell>
-                <TableCell>{row.cliente}</TableCell>
+                <TableCell className="font-medium">{row.numeroRotabile}</TableCell>
+                <TableCell>{row.postazione}</TableCell>
                 <TableCell>{row.responsabile}</TableCell>
                 <TableCell className="text-xs">
                   {new Date(row.inizio).toLocaleDateString("it-IT")} →{" "}
@@ -275,7 +275,7 @@ export default function Home() {
     const q = query.toLowerCase().trim();
     const filtered = PRC_DATA.filter((r) => {
       if (!q) return true;
-      const hay = `${r.id} ${r.commessa} ${r.cliente} ${r.responsabile}`.toLowerCase();
+      const hay = `${r.id} ${r.numeroRotabile} ${r.postazione} ${r.responsabile}`.toLowerCase();
       return hay.includes(q);
     });
     return {
@@ -301,7 +301,7 @@ export default function Home() {
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Dashboard PRC</h1>
           <p className="text-sm text-muted-foreground">
-            Demo di monitoraggio commesse: PRC in corso e completati.
+            Demo di monitoraggio PRC: numero rotabile e postazione.
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -345,8 +345,6 @@ export default function Home() {
         value={query}
         onChange={setQuery}
         onRefresh={() => {
-          // placeholder per la demo
-          // qui potresti fare un re-fetch dati
           console.log("refresh");
         }}
       />
